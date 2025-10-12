@@ -30,7 +30,7 @@ import { confirmClearData, tryRecoverJSON } from "./helpers/aiChatHelper.jsx";
 
 import { SearchInChats } from "./components/aiChat/searchInChats.jsx";
 
-import { format_chat_to_prompt, MessagePair, pairs_to_messages } from "./classes/message.js";
+import { format_chat_to_prompt, Message, MessagePair, pairs_to_messages } from "./classes/message.js";
 
 import { getChatResponse, getChatResponseSync } from "./api/gpt.jsx";
 import * as providers from "./api/providers.js";
@@ -783,7 +783,7 @@ export default function Chat({ launchContext }) {
     if (newMessage?.files) {
       currentChatData.messages[idx].files = newMessage.files;
       // Process and cache files immediately after assignment
-      currentChatData.messages[idx].processAndCacheFiles();
+      currentChatData.messages[idx] = Message.processFiles(currentChatData.messages[idx]);
     }
 
     currentChatData.messages[idx].second.content = "";
@@ -944,7 +944,7 @@ export default function Chat({ launchContext }) {
     currentChatData.messages.unshift(newMessagePair);
 
     // Process and cache files in the message that's now in the chat
-    currentChatData.messages[0].processAndCacheFiles();
+    currentChatData.messages[0] = Message.processFiles(currentChatData.messages[0]);
 
     setCurrentChatData(currentChatData); // possibly redundant, put here for safety and consistency
     await flushUpdateChat(currentChatData);

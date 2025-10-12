@@ -28,6 +28,13 @@ export class Message {
       this.files = processFiles(this.files);
     }
   }
+
+  static processFiles(m) {
+    m = structuredClone(m); // avoid mutating original
+    let message = new Message(m);
+    message.processAndCacheFiles();
+    return message;
+  }
 }
 
 export class MessagePair {
@@ -91,8 +98,8 @@ export const pairs_to_messages = (pairs, query = null) => {
     if (!messagePair.first.content && !messagePair.files) continue;
 
     // Process and cache files in the original MessagePair if needed
-    if (messagePair.files && messagePair.processAndCacheFiles) {
-      messagePair.processAndCacheFiles();
+    if (messagePair.files) {
+      messagePair = Message.processFiles(messagePair);
     }
 
     chat.push(
@@ -173,18 +180,7 @@ export const messages_to_json = (chat, { readFiles = true, provider = null } = {
       console.assert(msg.role === "user", "Only user messages can have files");
 
       // Process and cache files in the original chat object for memoization
-      if (chat[i].processAndCacheFiles) {
-        chat[i].processAndCacheFiles();
-        // Update our copy with the processed files
-        msg.files = chat[i].files;
-      } else {
-        // Fallback for plain objects that aren't Message instances
-        // Process files and update both the original object and our copy for memoization
-        console.log(`Processing files for plain object (no processAndCacheFiles method)`);
-        const processedFiles = processFiles(msg.files);
-        chat[i].files = processedFiles; // Update original for memoization
-        msg.files = processedFiles; // Update copy for current use
-      }
+      msg.files = Message.processFiles(msg.files);
 
       for (const file of msg.files) {
         const content = file.content || file; // backward compatibility
