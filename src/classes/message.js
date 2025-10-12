@@ -30,10 +30,14 @@ export class Message {
   }
 
   static processFiles(m) {
-    m = structuredClone(m); // avoid mutating original
-    let message = new Message(m);
-    message.processAndCacheFiles();
-    return message;
+    if (m instanceof Message) {
+      m.processAndCacheFiles();
+      return m;
+    }
+    else {
+      m.files = processFiles(m.files);
+      return m;
+    }
   }
 }
 
