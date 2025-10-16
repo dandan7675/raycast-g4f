@@ -88,16 +88,7 @@ export const getBackendForFile = (filePath) => {
 // Simple text file reader
 const processWithSimple = (filePath) => {
   try {
-    let toast;
-    showToast({
-      style: Toast.Style.Animated,
-      title: `Reading ${path.basename(filePath)}`,
-      message: `Using Simple Reader...`,
-    }).then((t) => {
-      toast = t;
-    });
     const content = fs.readFileSync(filePath, "utf8");
-    if (toast) toast.hide();
     return {
       content,
       backend: FileBackend.SIMPLE,
@@ -115,7 +106,6 @@ const processWithSimple = (filePath) => {
 
 // Process file using markitdown
 const processWithMarkitdown = (filePath) => {
-  const fileName = path.basename(filePath);
   let toast;
 
   try {
