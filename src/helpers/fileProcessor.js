@@ -3,7 +3,6 @@ import path from "path";
 import os from "os";
 import crypto from "crypto";
 import { execSync } from "child_process";
-import { showToast, Toast } from "@raycast/api";
 import { Preferences } from "../api/preferences.js";
 
 // Simple shell escape function (alternative to shell-escape package)
@@ -120,14 +119,6 @@ const processWithMarkitdown = (filePath) => {
   let toast;
 
   try {
-    showToast({
-      style: Toast.Style.Animated,
-      title: `Processing ${fileName}`,
-      message: `Using MarkItDown...`,
-    }).then((t) => {
-      toast = t;
-    });
-
     // Use markitdown to convert to markdown
     const args = [filePath];
     const escapedArgs = shellEscape(args);
@@ -177,14 +168,6 @@ const processWithDocling = (filePath) => {
   let tempFolder = null;
 
   try {
-    showToast({
-      style: Toast.Style.Animated,
-      title: `Processing ${fileName}`,
-      message: `Using Docling...`,
-    }).then((t) => {
-      toast = t;
-    });
-
     // Set up temp folder
     tempFolder = createTempFolder();
 
