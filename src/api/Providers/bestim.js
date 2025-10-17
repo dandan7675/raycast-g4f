@@ -50,6 +50,8 @@ export const BestIMProvider = {
         let line = lines[i];
         if (line.startsWith("data: ")) {
           let chunk = line.substring(6);
+          // fix \n
+          chunk = chunk.replace(/\\n/g, "\n");
           yield chunk;
         }
       }
