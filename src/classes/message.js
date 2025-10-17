@@ -33,8 +33,7 @@ export class Message {
     if (m instanceof Message) {
       m.processAndCacheFiles();
       return m;
-    }
-    else {
+    } else {
       m.files = processFiles(m.files);
       return m;
     }
